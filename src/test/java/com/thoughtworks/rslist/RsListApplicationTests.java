@@ -36,22 +36,31 @@ class RsListApplicationTests {
     void shouldGetOneList() throws Exception {
         mockMvc.perform(get("/rs/1"))
                 .andExpect(jsonPath("$.eventName",is("第一条事件")))
+                .andExpect(jsonPath("$.keyWord",is("无")))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/2"))
                 .andExpect(jsonPath("$.eventName",is("第二条事件")))
+                .andExpect(jsonPath("$.keyWord",is("无")))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/3"))
                 .andExpect(jsonPath("$.eventName",is("第三条事件")))
+                .andExpect(jsonPath("$.keyWord",is("无")))
                 .andExpect(status().isOk());
     }
 
     @Test
     void shouldGetRsEventFromTo() throws Exception {
         mockMvc.perform(get("/rs/list?start=1&end=2"))
-                .andExpect(content().string("[第一条事件, 第二条事件]"))
+                .andExpect(jsonPath("$[0].eventName",is("第一条事件")))
+                .andExpect(jsonPath("$[1].eventName",is("第二条事件")))
+                .andExpect(jsonPath("$[0].keyWord",is("无")))
+                .andExpect(jsonPath("$[1].keyWord",is("无")))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/list?start=2&end=3"))
-                .andExpect(content().string("[第二条事件, 第三条事件]"))
+                .andExpect(jsonPath("$[0].eventName",is("第二条事件")))
+                .andExpect(jsonPath("$[1].eventName",is("第三条事件")))
+                .andExpect(jsonPath("$[0].keyWord",is("无")))
+                .andExpect(jsonPath("$[1].keyWord",is("无")))
                 .andExpect(status().isOk());
     }
 
@@ -61,7 +70,14 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(postEvent).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/list"))
-                .andExpect(content().string("[第一条事件, 第二条事件, 第三条事件, 第四条事件]"))
+                .andExpect(jsonPath("$[0].eventName",is("第一条事件")))
+                .andExpect(jsonPath("$[1].eventName",is("第二条事件")))
+                .andExpect(jsonPath("$[2].eventName",is("第三条事件")))
+                .andExpect(jsonPath("$[3].eventName",is("第四条事件")))
+                .andExpect(jsonPath("$[0].keyWord",is("无")))
+                .andExpect(jsonPath("$[1].keyWord",is("无")))
+                .andExpect(jsonPath("$[2].keyWord",is("无")))
+                .andExpect(jsonPath("$[3].keyWord",is("无")))
                 .andExpect(status().isOk());
     }
 
