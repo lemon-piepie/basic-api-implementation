@@ -91,7 +91,34 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[0].keyWord",is("无")))
                 .andExpect(jsonPath("$[1].keyWord",is("无")))
                 .andExpect(status().isOk());
-        
+    }
+
+    @Test
+    void shouldModifyEventInList() throws Exception {
+        String modifyEvent1 = "{\"eventName\":\"第五条事件\"}";
+        String modifyEvent2 = "{\"keyWord\":\"科技\"}";
+        String modifyEvent3 = "{\"eventName\":\"第四条事件\",\"keyWord\":\"生活\"}";
+
+        mockMvc.perform(post("/rs/modify/1").content(modifyEvent1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$[0].eventName",is("第五条事件")))
+                .andExpect(jsonPath("$[0].keyWord",is("无")))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/rs/modify/2").content(modifyEvent2).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$[1].eventName",is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord",is("科技")))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/rs/modify/3").content(modifyEvent3).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$[2].eventName",is("第四条事件")))
+                .andExpect(jsonPath("$[2].keyWord",is("生活")))
+                .andExpect(status().isOk());
     }
 
 }
