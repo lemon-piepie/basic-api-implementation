@@ -1,37 +1,40 @@
 package com.thoughtworks.rslist.api;
 
+import com.thoughtworks.rslist.RsEvent;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 public class RsController {
-  private List<String> rsList = Stream.of("第一条事件", "第二条事件", "第三条事件").collect(Collectors.toList());
+  private List<RsEvent> rsList = initRsEvent();
 
-  /*@GetMapping("/rs/list")
-  public String getRsList(){
-    return rsList.toString();
-  }*/
+  private List<RsEvent> initRsEvent(){
+    List<RsEvent> rsEvents = new ArrayList<>();
+    rsEvents.add(new RsEvent("第一条事件","无"));
+    rsEvents.add(new RsEvent("第二条事件","无"));
+    rsEvents.add(new RsEvent("第三条事件","无"));
+    return rsEvents;
+  }
+
 
   @GetMapping("rs/{index}")
-  public String getOneList(@PathVariable int index){
+  public RsEvent getOneList(@PathVariable int index){
     return rsList.get(index - 1);
   }
 
   @GetMapping("/rs/list")
-  public String getRsEventFromTo(@RequestParam(required = false) Integer start,
-                                 @RequestParam(required = false) Integer end){
+  public List<RsEvent> getRsEventFromTo(@RequestParam(required = false) Integer start,
+                                        @RequestParam(required = false) Integer end){
     if (start == null || end == null){
-      return rsList.toString();
+      return rsList;
     }
-    return rsList.subList(start-1,end).toString();
+    return rsList.subList(start-1,end);
   }
 
   @PostMapping("/rs/event")
-  public void addOneEventToList(@RequestBody String rsEvent){
+  public void addOneEventToList(@RequestBody RsEvent rsEvent){
     rsList.add(rsEvent);
   }
 
