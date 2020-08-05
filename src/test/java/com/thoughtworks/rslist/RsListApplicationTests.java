@@ -23,7 +23,7 @@ class RsListApplicationTests {
     @Autowired
     MockMvc mockMvc;
 
-        @Test
+    @Test
     void shouldGetErrorIfIndexInvalid() throws Exception {
         mockMvc.perform(get("/rs/5"))
                 .andExpect(status().isBadRequest())
@@ -31,15 +31,17 @@ class RsListApplicationTests {
     }
 
     @Test
-    void shouldGetErrorIfRangeInvalid() throws Exception {
-        mockMvc.perform(get("/rs/list?start=1&end=2"))
-                .andExpect(jsonPath("$[0].eventName",is("理财产品")))
-                .andExpect(jsonPath("$[1].eventName",is("最新款5G手机")))
-                .andExpect(jsonPath("$[0].keyWord",is("金融")))
-                .andExpect(jsonPath("$[1].keyWord",is("科技")))
-                .andExpect(status().isOk());
-    }
+    void shouldGetErrorWhenUserInvalidCauseAgeOutOfRange() throws Exception {
+        UserDetiles userNew = new UserDetiles(
+                "Tom",5,"male","tommy@qq.com","11234567890");
+        RsEvent postUserEvent = new RsEvent("新事件","无",userNew);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
 
+        mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
+    }
 
     @Test
     void shouldGetErrorWhenUserInvalidCauseNameNull() throws Exception {
@@ -50,7 +52,8 @@ class RsListApplicationTests {
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
 
         mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
 
     @Test
@@ -62,21 +65,10 @@ class RsListApplicationTests {
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
 
         mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
 
-
-    @Test
-    void shouldGetErrorWhenUserInvalidCauseAgeOutOfRange() throws Exception {
-        UserDetiles userNew = new UserDetiles(
-                "Wang",120,"male","xiaowang@qq.com","18912341234");
-        RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
-
-        mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
 
     @Test
     void shouldGetErrorWhenUserInvalidCauseGenderNull() throws Exception {
@@ -87,7 +79,8 @@ class RsListApplicationTests {
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
 
         mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
 
     @Test
@@ -99,7 +92,8 @@ class RsListApplicationTests {
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
 
         mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
 
     @Test
@@ -111,7 +105,8 @@ class RsListApplicationTests {
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
 
         mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
 
     @Test
@@ -123,23 +118,17 @@ class RsListApplicationTests {
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
 
         mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
 
     @Test
-    void shouldGetErrorWhenUserInvalid() throws Exception {
-        UserDetiles userNew = new UserDetiles(
-                "Ming",18,"male","xiaoming@qq.com","11234567890");
-        RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
-
-        mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
-        mockMvc.perform(get("/rs/list"))
-                .andExpect(jsonPath("$[3].eventName",is("PS5发布会")))
-                .andExpect(jsonPath("$[3].keyWord",is("游戏")))
-                .andExpect(jsonPath("$[3]",not(hasKey("user"))))
+    void shouldGetErrorIfRangeInvalid() throws Exception {
+        mockMvc.perform(get("/rs/list?start=1&end=2"))
+                .andExpect(jsonPath("$[0].eventName",is("理财产品")))
+                .andExpect(jsonPath("$[1].eventName",is("最新款5G手机")))
+                .andExpect(jsonPath("$[0].keyWord",is("金融")))
+                .andExpect(jsonPath("$[1].keyWord",is("科技")))
                 .andExpect(status().isOk());
     }
 }

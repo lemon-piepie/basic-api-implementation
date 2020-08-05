@@ -6,6 +6,7 @@ import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -55,10 +56,16 @@ public class RsController {
     return ResponseEntity.created(null).build();
   }
 
-  @ExceptionHandler(InvalidIndexException.class)
-  public ResponseEntity exceptionHandler(InvalidIndexException ex){
+  @ExceptionHandler({InvalidIndexException.class, MethodArgumentNotValidException.class})
+  public ResponseEntity exceptionHandler(Exception ex){
     CommonError commonError = new CommonError();
-    commonError.setError(ex.getMessage());
+    String errorMessage;
+    if (ex instanceof MethodArgumentNotValidException){
+      errorMessage = "invalid param";
+    }else {
+      errorMessage = "invalid index";
+    }
+    commonError.setError(errorMessage);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commonError);
   }
 
