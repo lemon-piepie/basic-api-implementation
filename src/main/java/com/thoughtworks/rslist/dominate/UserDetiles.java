@@ -5,7 +5,6 @@ import javax.validation.constraints.*;
 public class UserDetiles {
     @NotNull
     @Size(max = 8)
-
     private String userName;
 
     @NotNull

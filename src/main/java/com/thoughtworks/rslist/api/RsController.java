@@ -48,4 +48,12 @@ public class RsController {
     return ResponseEntity.created(null).build();
   }
 
+  @GetMapping("/rs/userList")
+  public List<UserDetiles> getUser(){
+    List<UserDetiles> expectUsers = new ArrayList<>();
+    for (int i = 0; i < rsList.size(); i++){
+      expectUsers.add(rsList.get(i).getUser());
+    }
+      return expectUsers;
+  }
 }

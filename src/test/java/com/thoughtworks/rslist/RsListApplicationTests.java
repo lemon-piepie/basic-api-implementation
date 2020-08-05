@@ -74,5 +74,26 @@ class RsListApplicationTests {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void shouldGetUsersOnList() throws Exception {
+        mockMvc.perform(get("/rs/userList"))
+                .andExpect(jsonPath("$[0].userName",is("Ming")))
+                .andExpect(jsonPath("$[1].userName",is("Hua")))
+                .andExpect(jsonPath("$[2].userName",is("Li")))
+                .andExpect(jsonPath("$[0].age",is(18)))
+                .andExpect(jsonPath("$[1].age",is(20)))
+                .andExpect(jsonPath("$[2].age",is(19)))
+                .andExpect(jsonPath("$[0].gender",is("male")))
+                .andExpect(jsonPath("$[1].gender",is("female")))
+                .andExpect(jsonPath("$[2].gender",is("female")))
+                .andExpect(jsonPath("$[0].email",is("xiaoming@qq.com")))
+                .andExpect(jsonPath("$[1].email",is("xiaohua@163.com")))
+                .andExpect(jsonPath("$[2].email",is("xiaoli@sina.com")))
+                .andExpect(jsonPath("$[0].phoneNumber",is("11234567890")))
+                .andExpect(jsonPath("$[1].phoneNumber",is("11223344556")))
+                .andExpect(jsonPath("$[2].phoneNumber",is("11222333444")))
+                .andExpect(status().isOk());
+    }
+
 
 }
