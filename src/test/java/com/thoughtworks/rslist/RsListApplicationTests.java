@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -118,7 +118,7 @@ class RsListApplicationTests {
     @Test
     void ageShouldNotLessThan18() throws Exception {
         UserDetiles userNew = new UserDetiles(
-                "Ming",15,"male","xiaowang@qq.com","18912341234");
+                "Wang",15,"male","xiaowang@qq.com","18912341234");
         RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
         ObjectMapper objectMapper = new ObjectMapper();
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
@@ -130,7 +130,7 @@ class RsListApplicationTests {
     @Test
     void ageShouldNotMoreThan100() throws Exception {
         UserDetiles userNew = new UserDetiles(
-                "Ming",120,"male","xiaowang@qq.com","18912341234");
+                "Wang",120,"male","xiaowang@qq.com","18912341234");
         RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
         ObjectMapper objectMapper = new ObjectMapper();
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
@@ -142,7 +142,7 @@ class RsListApplicationTests {
     @Test
     void genderShouldNotEmpty() throws Exception {
         UserDetiles userNew = new UserDetiles(
-                "Ming",20,null,"xiaowang@qq.com","18912341234");
+                "Wang",20,null,"xiaowang@qq.com","18912341234");
         RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
         ObjectMapper objectMapper = new ObjectMapper();
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
@@ -154,7 +154,7 @@ class RsListApplicationTests {
     @Test
     void emailShouldBeVaild() throws Exception {
         UserDetiles userNew = new UserDetiles(
-                "Ming",20,"male","xiaowang","18912341234");
+                "Wang",20,"male","xiaowang","18912341234");
         RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
         ObjectMapper objectMapper = new ObjectMapper();
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
@@ -166,7 +166,7 @@ class RsListApplicationTests {
     @Test
     void phoneNumberShouldBeVaild() throws Exception {
         UserDetiles userNew = new UserDetiles(
-                "Ming",20,"male","xiaowang@126.com","189123412");
+                "Wang",20,"male","xiaowang@qq.com","189123412");
         RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
         ObjectMapper objectMapper = new ObjectMapper();
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
@@ -178,12 +178,30 @@ class RsListApplicationTests {
     @Test
     void phoneNumberShouldNotNull() throws Exception {
         UserDetiles userNew = new UserDetiles(
-                "Ming",20,"male","xiaowang@126.com",null);
+                "Wang",20,"male","xiaowang@qq.com",null);
         RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
         ObjectMapper objectMapper = new ObjectMapper();
         String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
 
         mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldAddOnlyEventToListWhenUserExist() throws Exception {
+        UserDetiles userNew = new UserDetiles(
+                "Ming",18,"male","xiaoming@qq.com","11234567890");
+        RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
+
+        mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$[3].eventName",is("PS5发布会")))
+                .andExpect(jsonPath("$[3].keyWord",is("游戏")))
+                //.andExpect(jsonPath("$[3].user.userName",is("Ming")))
+                .andExpect(jsonPath("$[3]",not(hasKey("user"))))
+                .andExpect(status().isOk());
     }
 }

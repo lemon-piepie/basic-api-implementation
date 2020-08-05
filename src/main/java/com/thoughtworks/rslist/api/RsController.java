@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dominate.RsEvent;
 import com.thoughtworks.rslist.dominate.UserDetiles;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 public class RsController {
   private List<RsEvent> rsList = initRsEvent();
+
 
   private List<RsEvent> initRsEvent(){
     List<RsEvent> rsEvents = new ArrayList<>();
@@ -26,8 +28,8 @@ public class RsController {
 
 
   @GetMapping("rs/{index}")
-  public RsEvent getOneList(@PathVariable int index){
-    return rsList.get(index - 1);
+  public ResponseEntity<RsEvent> getOneList(@PathVariable int index){
+    return ResponseEntity.ok(rsList.get(index - 1));
   }
 
   @GetMapping("/rs/list")
@@ -41,32 +43,9 @@ public class RsController {
 
 
   @PostMapping("/rs/event")
-  public void addOneEventToList(@RequestBody @Valid RsEvent rsEvent){
+  public ResponseEntity addOneEventToList(@RequestBody @Valid RsEvent rsEvent){
     rsList.add(rsEvent);
+    return ResponseEntity.created(null).build();
   }
 
-
-  /*
-  @PostMapping("/rs/delete/{index}")
-  public void removeEventFromList(@PathVariable int index){
-    rsList.remove(index -1);
-  }
-
-  @PostMapping("/rs/modify/{index}")
-  public void modifyEventInList(@PathVariable int index,
-                                @RequestBody RsEvent rsEvent){
-    RsEvent modifyEvent = new RsEvent(null,null);
-    if (rsEvent.getEventName()!=null){
-      modifyEvent.setEventName(rsEvent.getEventName());
-    }else {
-      modifyEvent.setEventName(rsList.get(index-1).getEventName());
-    }
-    if (rsEvent.getKeyWord()!=null){
-      modifyEvent.setKeyWord(rsEvent.getKeyWord());
-    }else {
-      modifyEvent.setKeyWord(rsList.get(index-1).getKeyWord());
-    }
-    rsList.set(index-1,modifyEvent);
-  }
- */
 }
