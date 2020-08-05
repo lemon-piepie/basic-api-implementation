@@ -150,4 +150,16 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void emailShouldBeVaild() throws Exception {
+        UserDetiles userNew = new UserDetiles(
+                "Ming",20,"male","xiaowang","18912341234");
+        RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
+
+        mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
