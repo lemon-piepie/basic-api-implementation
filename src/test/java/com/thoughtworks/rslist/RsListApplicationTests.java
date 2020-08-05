@@ -94,6 +94,4 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[2].phoneNumber",is("11222333444")))
                 .andExpect(status().isOk());
     }
-
-
 }

@@ -45,6 +45,7 @@ public class RsController {
   @PostMapping("/rs/event")
   public ResponseEntity addOneEventToList(@RequestBody @Valid RsEvent rsEvent){
     rsList.add(rsEvent);
+    System.out.println(rsList.indexOf(rsEvent));
     return ResponseEntity.created(null).build();
   }
 
