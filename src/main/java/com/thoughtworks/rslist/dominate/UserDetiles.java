@@ -19,6 +19,7 @@ public class UserDetiles {
     private String email;
 
     @Pattern(regexp = "1\\d{10}")
+    @NotNull
     private String phoneNumber;
 
     public UserDetiles(String userName,int age,String gender,String email,String phoneNumber){

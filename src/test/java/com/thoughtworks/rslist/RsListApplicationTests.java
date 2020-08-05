@@ -162,4 +162,28 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void phoneNumberShouldBeVaild() throws Exception {
+        UserDetiles userNew = new UserDetiles(
+                "Ming",20,"male","xiaowang@126.com","189123412");
+        RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
+
+        mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void phoneNumberShouldNotNull() throws Exception {
+        UserDetiles userNew = new UserDetiles(
+                "Ming",20,"male","xiaowang@126.com",null);
+        RsEvent postUserEvent = new RsEvent("PS5发布会","游戏",userNew);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String postUserEventJson = objectMapper.writeValueAsString(postUserEvent);
+
+        mockMvc.perform(post("/rs/event").content(postUserEventJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
