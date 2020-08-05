@@ -124,12 +124,9 @@ class RsListApplicationTests {
 
     @Test
     void shouldGetErrorIfRangeInvalid() throws Exception {
-        mockMvc.perform(get("/rs/list?start=1&end=2"))
-                .andExpect(jsonPath("$[0].eventName",is("理财产品")))
-                .andExpect(jsonPath("$[1].eventName",is("最新款5G手机")))
-                .andExpect(jsonPath("$[0].keyWord",is("金融")))
-                .andExpect(jsonPath("$[1].keyWord",is("科技")))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/list?start=1&end=8"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid request param")));
     }
 }
 

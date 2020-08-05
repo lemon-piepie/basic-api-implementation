@@ -4,6 +4,7 @@ import com.thoughtworks.rslist.dominate.RsEvent;
 import com.thoughtworks.rslist.dominate.UserDetiles;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
+import com.thoughtworks.rslist.exception.InvalidRequestParamException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,9 +42,11 @@ public class RsController {
 
   @GetMapping("/rs/list")
   public List<RsEvent> getRsEventFromTo(@RequestParam(required = false) Integer start,
-                                        @RequestParam(required = false) Integer end){
+                                        @RequestParam(required = false) Integer end) throws InvalidRequestParamException {
     if (start == null || end == null){
       return rsList;
+    }else if (start < 0 || start > rsList.size() || end < 0 || end > rsList.size() || start > end){
+      throw new InvalidRequestParamException("invalid request param");
     }
     return rsList.subList(start-1,end);
   }
@@ -56,15 +59,19 @@ public class RsController {
     return ResponseEntity.created(null).build();
   }
 
-  @ExceptionHandler({InvalidIndexException.class, MethodArgumentNotValidException.class})
+  @ExceptionHandler({InvalidIndexException.class, MethodArgumentNotValidException.class,
+                    InvalidRequestParamException.class})
   public ResponseEntity exceptionHandler(Exception ex){
     CommonError commonError = new CommonError();
     String errorMessage;
     if (ex instanceof MethodArgumentNotValidException){
       errorMessage = "invalid param";
+    }else if (ex instanceof InvalidRequestParamException){
+      errorMessage = "invalid request param";
     }else {
       errorMessage = "invalid index";
     }
+
     commonError.setError(errorMessage);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commonError);
   }
