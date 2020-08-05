@@ -4,6 +4,7 @@ import com.thoughtworks.rslist.dominate.RsEvent;
 import com.thoughtworks.rslist.dominate.UserDetiles;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +41,7 @@ public class RsController {
 
 
   @PostMapping("/rs/event")
-  public void addOneEventToList(@RequestBody RsEvent rsEvent){
+  public void addOneEventToList(@RequestBody @Valid RsEvent rsEvent){
     rsList.add(rsEvent);
   }
 

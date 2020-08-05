@@ -1,16 +1,24 @@
 package com.thoughtworks.rslist.dominate;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 public class UserDetiles {
-
+    @NotNull
+    @Size(max = 8)
     private String userName;
+
+    @NotNull
+    @Max(100)
+    @Min(18)
     private int age;
+
+    @NotNull
     private String gender;
+
+    @Email
     private String email;
+
+    @Pattern(regexp = "1\\d{10}")
     private String phoneNumber;
 
     public UserDetiles(String userName,int age,String gender,String email,String phoneNumber){

@@ -1,8 +1,12 @@
 package com.thoughtworks.rslist.dominate;
 
+import javax.validation.Valid;
+
 public class RsEvent {
     private String eventName;
     private String keyWord;
+
+    @Valid
     private UserDetiles user;
 
     public  RsEvent(String eventName, String keyWord,UserDetiles user){
