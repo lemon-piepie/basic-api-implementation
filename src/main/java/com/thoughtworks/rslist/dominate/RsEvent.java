@@ -1,10 +1,6 @@
 package com.thoughtworks.rslist.dominate;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.*;
 
 
 import javax.validation.Valid;
@@ -14,6 +10,7 @@ public class RsEvent {
     private String keyWord;
 
     @Valid
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private UserDetiles user;
 
     public  RsEvent(String eventName, String keyWord,UserDetiles user){
@@ -39,13 +36,15 @@ public class RsEvent {
         this.keyWord = keyWord;
     }
 
-    @JsonIgnore
+
     public UserDetiles getUser() {
         return user;
     }
 
     @JsonProperty
     public void setUser(UserDetiles user) {
+
         this.user = user;
     }
+
 }

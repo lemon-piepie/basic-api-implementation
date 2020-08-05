@@ -200,7 +200,6 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$[3].eventName",is("PS5发布会")))
                 .andExpect(jsonPath("$[3].keyWord",is("游戏")))
-                //.andExpect(jsonPath("$[3].user.userName",is("Ming")))
                 .andExpect(jsonPath("$[3]",not(hasKey("user"))))
                 .andExpect(status().isOk());
     }
