@@ -5,6 +5,8 @@ import com.thoughtworks.rslist.dominate.UserDetiles;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.exception.InvalidRequestParamException;
+import com.thoughtworks.rslist.exception.InvalidUserException;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,6 +34,7 @@ public class RsController {
   }
 
 
+
   @GetMapping("rs/{index}")
   public ResponseEntity<RsEvent> getOneList(@PathVariable int index) throws InvalidIndexException {
     if(index > rsList.size()){
@@ -54,10 +57,10 @@ public class RsController {
 
   @PostMapping("/rs/event")
   public ResponseEntity addOneEventToList(@RequestBody @Valid RsEvent rsEvent){
-
     rsList.add(rsEvent);
     return ResponseEntity.created(null).build();
   }
+
 
   @ExceptionHandler({InvalidIndexException.class, MethodArgumentNotValidException.class,
                     InvalidRequestParamException.class})
@@ -68,10 +71,11 @@ public class RsController {
       errorMessage = "invalid param";
     }else if (ex instanceof InvalidRequestParamException){
       errorMessage = "invalid request param";
-    }else {
+    }else if (ex instanceof InvalidUserException){
+      errorMessage = "invalid user";
+    } else {
       errorMessage = "invalid index";
     }
-
     commonError.setError(errorMessage);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commonError);
   }
