@@ -44,10 +44,6 @@ public class RsController {
 
   @PostMapping("/rs/event")
   public ResponseEntity addOneEventToList(@RequestBody @Valid RsEvent rsEvent){
-    if (rsEvent.getUser().getUserName().equals("Ming") || rsEvent.getUser().getUserName().equals("Hua")
-            || rsEvent.getUser().getUserName().equals("Li")){
-      rsEvent.setUser(null);
-    }
     rsList.add(rsEvent);
     return ResponseEntity.created(null).build();
   }
