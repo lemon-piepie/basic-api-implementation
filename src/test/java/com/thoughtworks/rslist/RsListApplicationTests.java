@@ -70,11 +70,7 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/2"))
                 .andExpect(jsonPath("$.eventName",is("最新款5G手机")))
                 .andExpect(jsonPath("$.keyWord",is("科技")))
-                .andExpect(jsonPath("$.user.userName",is("Hua")))
-                .andExpect(jsonPath("$.user.age",is(20)))
-                .andExpect(jsonPath("$.user.gender",is("female")))
-                .andExpect(jsonPath("$.user.email",is("xiaohua@163.com")))
-                .andExpect(jsonPath("$.user.phoneNumber",is("11223344556")))
+                .andExpect(jsonPath("$",not(hasKey("user"))))
                 .andExpect(status().isOk());
     }
 
