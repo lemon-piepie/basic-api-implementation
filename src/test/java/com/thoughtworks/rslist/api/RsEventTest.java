@@ -62,5 +62,12 @@ public class RsEventTest {
         assertEquals(userId,events.get(0).getUserId());
     }
 
-
+    @Test
+    void shouldGetErrorAddRsEventWhenUserNotExist() throws Exception {
+        String json = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"生活\",\"userId\":\"50\"}";
+        mockMvc.perform(post("/rs/event")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isBadRequest());
+    }
 }
