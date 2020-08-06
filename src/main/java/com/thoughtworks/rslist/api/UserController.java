@@ -37,5 +37,10 @@ public class UserController {
     ResponseEntity<UserEntity> getOneUser(@PathVariable int index){
         return ResponseEntity.ok(userRepository.getUserById(index));
     }
+
+    @DeleteMapping("/user/{index}")
+    void deleteUser(@PathVariable int index){
+        userRepository.deleteById(index);
+    }
 }
 

@@ -24,8 +24,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,5 +83,31 @@ public class UserEventTest {
                 .andExpect(jsonPath("$.userName",is("Sun")))
                 .andExpect(jsonPath("$.age",is(20)))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldDeleteUserByIndex() throws Exception {
+        UserDetiles user1 = new UserDetiles(
+                "Sun",20,"male","xiaosun@qq.com","18912341234");
+        UserDetiles user2 = new UserDetiles(
+                "Ming",22,"male","xiaoming@qq.com","15912341234");
+
+        String request1 = objectMapper.writeValueAsString(user1);
+        String request2 = objectMapper.writeValueAsString(user2);
+
+        mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request1))
+                .andExpect(status().isOk());
+        mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request2))
+                .andExpect(status().isOk());
+        mockMvc.perform(delete("/user/1"))
+                .andExpect(status().isOk());
+
+        List<UserEntity> users = userRepository.findAll();
+
+        assertEquals(1,users.size());
     }
 }
