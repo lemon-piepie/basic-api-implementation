@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.annotation.Generated;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -28,4 +29,7 @@ public class UserEntity {
     private String email;
     private String phoneNumber;
     private int votes;
+
+    //@OneToMany(cascade = CascadeType.REMOVE,mappedBy = "userId")
+    //private static List<RsEventEntity> events;
 }

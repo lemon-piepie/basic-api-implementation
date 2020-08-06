@@ -47,11 +47,12 @@ public class RsController {
         RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName(rsEvent.getEventName())
                 .keyWord(rsEvent.getKeyWord())
-                .userId(rsEvent.getUserId())
+                .userId(Integer.valueOf(rsEvent.getUserId()))
                 .build();
         rsEventRepository.save(rsEventEntity);
         return ResponseEntity.created(null).build();
     }
+
 
     @ExceptionHandler(UserNotValidException.class)
     public ResponseEntity<CommonError> handleRequestErrorHandler(Exception ex){
