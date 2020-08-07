@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -107,5 +106,34 @@ public class RsEventTest {
         assertEquals(0,events.size());
         List<UserEntity> users = userRepository.findAll();
         assertEquals(0,users.size());
+    }
+
+    @Test
+    void shouldUpdateRsEvent() throws Exception {
+        UserEntity user = UserEntity.builder()
+                .userName("Zhou")
+                .age(25)
+                .gender("female")
+                .email("xiaozhou@sina.com")
+                .phoneNumber("13812341234")
+                .votes(10)
+                .build();
+        userRepository.save(user);
+
+        Integer userId = user.getId();
+        String userIdString = String.valueOf(userId);
+        String json = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"生活\",\"userId\":" + userId + "}";
+        mockMvc.perform(post("/rs/event")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isCreated());
+        String jsonUpdate = "{\"eventName\":\"线上课程\",\"keyWord\":\"学习\",\"userId\":" + userId + "}";
+        mockMvc.perform(patch("/rs/"+userIdString)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonUpdate))
+                .andExpect(status().isCreated());
+        List<RsEventEntity> events = rsEventRepository.findAll();
+        assertEquals(1,events.size());
+        assertEquals("线上课程",events.get(0).getEventName());
     }
 }

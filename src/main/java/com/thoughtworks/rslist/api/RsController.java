@@ -53,6 +53,16 @@ public class RsController {
         return ResponseEntity.created(null).build();
     }
 
+    @PatchMapping("/rs/{index}")
+    ResponseEntity updateRsEvent(@PathVariable Integer index,
+                                 @RequestBody RsEventEntity rsEvent) {
+        RsEventEntity targetRsEvent = rsEventRepository.findByUserId(index);
+        targetRsEvent.setEventName(rsEvent.getEventName());
+        targetRsEvent.setKeyWord(rsEvent.getKeyWord());
+        rsEventRepository.save(targetRsEvent);
+        return ResponseEntity.created(null).build();
+    }
+
 
     @ExceptionHandler(UserNotValidException.class)
     public ResponseEntity<CommonError> handleRequestErrorHandler(Exception ex){

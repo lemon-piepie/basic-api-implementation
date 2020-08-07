@@ -13,4 +13,6 @@ public interface RsEventRepository extends CrudRepository<RsEventEntity, Integer
     List<RsEventEntity> findAll();
     @Transactional
     void deleteByUserId(int userId);
+    @Transactional
+    RsEventEntity findByUserId(int userId);
 }

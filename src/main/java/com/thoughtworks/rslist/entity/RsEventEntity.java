@@ -5,21 +5,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "rsEvent")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "rsEvent")
 public class RsEventEntity {
     @Id
     @GeneratedValue
     private Integer id;
     private String eventName;
     private String keyWord;
+
     //@ManyToOne
     private int userId;
 

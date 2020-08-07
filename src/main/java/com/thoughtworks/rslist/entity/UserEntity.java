@@ -13,11 +13,11 @@ import javax.validation.constraints.*;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "user")
 public class UserEntity {
     @Id
     @GeneratedValue
@@ -31,5 +31,5 @@ public class UserEntity {
     private int votes;
 
     //@OneToMany(cascade = CascadeType.REMOVE,mappedBy = "userId")
-    //private static List<RsEventEntity> events;
+    //private List<RsEventEntity> events;
 }
