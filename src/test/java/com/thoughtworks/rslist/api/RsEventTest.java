@@ -3,8 +3,10 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.repository.VoteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,11 +33,14 @@ public class RsEventTest {
     UserRepository userRepository;
     @Autowired
     RsEventRepository rsEventRepository;
+    @Autowired
+    VoteRepository voteRepository;
 
     @BeforeEach
     void cleanUp(){
         userRepository.deleteAll();
         rsEventRepository.deleteAll();
+        voteRepository.deleteAll();
     }
 
     @Test
@@ -135,5 +141,31 @@ public class RsEventTest {
         List<RsEventEntity> events = rsEventRepository.findAll();
         assertEquals(1,events.size());
         assertEquals("线上课程",events.get(0).getEventName());
+    }
+
+    @Test
+    void shouldVote() throws Exception {
+        UserEntity user = UserEntity.builder()
+                .userName("Zhou")
+                .age(25)
+                .gender("female")
+                .email("xiaozhou@sina.com")
+                .phoneNumber("13812341234")
+                .votes(10)
+                .build();
+        userRepository.save(user);
+        Integer userId = user.getId();
+        String userIdString = String.valueOf(userId);
+        String json = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"生活\",\"userId\":" + userId + "}";
+        mockMvc.perform(post("/rs/event")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
+        String voteRequest = "{\"voteNum\":5, \"userId\":" + userId + ", \"voteTime\":\""+ LocalTime.now().toString()+"\"}";
+        mockMvc.perform(post("/rs/vote/"+userIdString)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(voteRequest))
+                .andExpect(status().isOk());
+        List<VoteEntity> votes = voteRepository.findAll();
+        assertEquals(1,votes.size());
     }
 }

@@ -1,7 +1,12 @@
 package com.thoughtworks.rslist.dominate;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDetiles {
     @NotNull
     @Size(max = 8)

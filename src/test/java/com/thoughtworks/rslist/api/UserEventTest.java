@@ -38,6 +38,7 @@ public class UserEventTest {
     @Autowired
     UserRepository userRepository;
 
+
     @BeforeEach
     void cleanUp(){
         userRepository.deleteAll();
