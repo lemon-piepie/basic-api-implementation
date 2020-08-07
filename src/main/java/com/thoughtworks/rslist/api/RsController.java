@@ -81,11 +81,14 @@ public class RsController {
     ResponseEntity vote(@PathVariable Integer index,
                         @RequestBody VoteEntity vote) {
         UserEntity user = userRepository.getUserById(vote.getUserId());
+        RsEventEntity event = rsEventRepository.findByUserId(vote.getUserId());
         if (user.getVotes() < vote.getVoteNum()){
             return ResponseEntity.badRequest().build();
         }
         vote.setRsEventId(index);
+        event.setVoteNum(vote.getVoteNum());
         voteRepository.save(vote);
+        rsEventRepository.save(event);
         return ResponseEntity.ok().build();
     }
 }

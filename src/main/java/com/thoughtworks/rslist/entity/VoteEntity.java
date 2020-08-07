@@ -25,10 +25,4 @@ public class VoteEntity {
     private String voteTime;
     private int voteNum;
 
-    private VoteEntity(Vote vote){
-        this.voteNum = vote.getVoteNum();
-        this.voteTime = vote.getVoteTime();
-        this.userId = vote.getUserId();
-        this.rsEventId = vote.getRsEventId();
-    }
 }

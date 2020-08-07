@@ -192,4 +192,31 @@ public class RsEventTest {
                 .content(voteRequest))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void shouldGetRsEventVoteNumber() throws Exception {
+        UserEntity user = UserEntity.builder()
+                .userName("Zhou")
+                .age(25)
+                .gender("female")
+                .email("xiaozhou@sina.com")
+                .phoneNumber("13812341234")
+                .votes(10)
+                .build();
+        userRepository.save(user);
+        Integer userId = user.getId();
+        String userIdString = String.valueOf(userId);
+
+        String json = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"生活\",\"userId\":" + userId + "}";
+        mockMvc.perform(post("/rs/event")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
+        String voteRequest = "{\"voteNum\":5, \"userId\":" + userId + ", \"voteTime\":\""+ LocalTime.now().toString()+"\"}";
+        mockMvc.perform(post("/rs/vote/"+userIdString)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(voteRequest))
+                .andExpect(status().isOk());
+        List<RsEventEntity> events = rsEventRepository.findAll();
+        assertEquals(5,events.get(0).getVoteNum());
+    }
 }

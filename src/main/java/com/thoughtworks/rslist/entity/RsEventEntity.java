@@ -25,4 +25,6 @@ public class RsEventEntity {
     //@ManyToOne
     private int userId;
 
+    private Integer voteNum = 0;
+
 }
