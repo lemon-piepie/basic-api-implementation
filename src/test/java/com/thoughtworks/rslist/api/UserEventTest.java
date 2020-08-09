@@ -38,7 +38,7 @@ public class UserEventTest {
     @Autowired
     UserRepository userRepository;
 
-    @BeforeEach
+    @AfterEach
     void cleanUp(){
         userRepository.deleteAll();
     }
@@ -103,7 +103,7 @@ public class UserEventTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request2))
                 .andExpect(status().isOk());
-        mockMvc.perform(delete("/user/1"))
+        mockMvc.perform(delete("/user/3"))
                 .andExpect(status().isOk());
 
         List<UserEntity> users = userRepository.findAll();
