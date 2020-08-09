@@ -71,9 +71,7 @@ public class RsController {
       errorMessage = "invalid param";
     }else if (ex instanceof InvalidRequestParamException){
       errorMessage = "invalid request param";
-    }else if (ex instanceof InvalidUserException){
-      errorMessage = "invalid user";
-    } else {
+    }else {
       errorMessage = "invalid index";
     }
     commonError.setError(errorMessage);
